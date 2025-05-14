@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Plant Suggestions | Plant Suggester{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Your Perfect Plant Matches</h1>
+        <p class="lead">Based on your preferences, we found these ideal plants for you:</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        <a href="{% url 'suggest_plants' %}" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-repeat"></i> Try Again
+        </a>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Your Preferences:</h2>
+                <div class="row">
+                    <div class="col-md-3">
+                        <p class="mb-1"><strong>Sunlight:</strong></p>
+                        <span class="badge bg-primary">
+                            {{ preferences.get_sunlight_display }}
+                        </span>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="mb-1"><strong>Water:</strong></p>
+                        <span class="badge bg-primary">
+                            {{ preferences.get_water_display }}
+                        </span>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="mb-1"><strong>Experience:</strong></p>
+                        <span class="badge bg-primary">
+                            {{ preferences.get_experience_display }}
+                        </span>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="mb-1"><strong>Location:</strong></p>
+                        <span class="badge bg-primary">
+                            {{ preferences.get_location_display }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if plants %}
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for plant in plants %}
+    <div class="col">
+        <div class="card plant-card h-100">
+            <img src="{{ plant.image_url }}" class="card-img-top plant-img" alt="{{ plant.name }}">
+            <div class="card-body">
+                <h2 class="card-title">{{ plant.name }}</h2>
+                <h5 class="card-subtitle text-muted mb-3">{{ plant.scientific_name }}</h5>
+                <p class="card-text">{{ plant.description }}</p>
+                
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <div class="p-3 border rounded text-center">
+                            <i class="bi bi-brightness-high fs-4 text-warning"></i>
+                            <p class="mb-0 small">Sunlight Needs</p>
+                            <strong>{{ plant.get_sunlight_needs_display }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 border rounded text-center">
+                            <i class="bi bi-droplet fs-4 text-primary"></i>
+                            <p class="mb-0 small">Water Needs</p>
+                            <strong>{{ plant.get_water_needs_display }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 border rounded text-center">
+                            <i class="bi bi-tools fs-4 text-secondary"></i>
+                            <p class="mb-0 small">Maintenance</p>
+                            <strong>{{ plant.get_maintenance_level_display }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 border rounded text-center">
+                            <i class="bi bi-geo-alt fs-4 text-success"></i>
+                            <p class="mb-0 small">Location</p>
+                            <strong>{{ plant.get_location_display }}</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-success">
+                    <i class="bi bi-lightbulb"></i> <strong>Why this plant?</strong>
+                    <p class="mb-0 small">
+                        {% if plant.maintenance_level == 'easy' and preferences.experience == 'beginner' %}
+                        Perfect for beginners - easy to care for!
+                        {% elif plant.water_needs == 'low' and preferences.water == 'low' %}
+                        Thrives with minimal watering - matches your preference!
+                        {% else %}
+                        Well-suited to your environment and care preferences.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-0">
+                <button class="btn btn-primary w-100">
+                    <i class="bi bi-journal-plus"></i> Add to My Plants
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-warning">
+    <h4 class="alert-heading">No perfect matches found</h4>
+    <p>We couldn't find plants that match all your preferences. Try adjusting your criteria or browse our <a href="{% url 'plant_list' %}" class="alert-link">full plant collection</a>.</p>
+</div>
+{% endif %}
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <h3 class="mb-3">Want more options?</h3>
+                <a href="{% url 'plant_list' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-list-ul"></i> Browse All Plants
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Removed duplicate image code -->
+{% endblock %}

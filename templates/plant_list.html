@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}All Plants | Plant Suggester{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Our Plant Collection</h1>
+    <a href="{% url 'suggest_plants' %}" class="btn btn-primary">
+        <i class="bi bi-magic"></i> Get Personalized Suggestions
+    </a>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for plant in plants %}
+    <div class="col">
+        <div class="card plant-card h-100">
+            <img src="{{ plant.image_url }}" class="card-img-top plant-img" alt="{{ plant.name }}">
+            <div class="card-body">
+                <h3 class="card-title">{{ plant.name }}</h3>
+                <h5 class="card-subtitle text-muted mb-3">{{ plant.scientific_name }}</h5>
+                <p class="card-text">{{ plant.description|truncatewords:25 }}</p>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="badge badge-custom">
+                        <i class="bi bi-brightness-high"></i> {{ plant.get_sunlight_needs_display }}
+                    </span>
+                    <span class="badge badge-custom">
+                        <i class="bi bi-droplet"></i> {{ plant.get_water_needs_display }}
+                    </span>
+                    <span class="badge badge-custom">
+                        <i class="bi bi-tools"></i> {{ plant.get_maintenance_level_display }}
+                    </span>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-0">
+                <a href="#" class="btn btn-outline-primary w-100">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-warning">No plants found in our database.</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
